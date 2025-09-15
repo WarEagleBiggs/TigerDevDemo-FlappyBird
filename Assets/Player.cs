@@ -1,4 +1,9 @@
+using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using TMPro;
+using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour
 {
@@ -12,8 +17,21 @@ public class Player : MonoBehaviour
 
     public bool isGamePlaying;
 
+    public int Score;
+    public TextMeshProUGUI ScoreTxt;
+
+    public GameObject ObstacleObj;
+    public Transform SpawnPos;
+
+    private void Start()
+    {
+        StartCoroutine(SpawnObs());
+    }
+
     void Update()
     {
+        ScoreTxt.SetText(Score.ToString());
+        
         if (Input.GetKeyDown(KeyCode.Space))
         {
             rb.linearVelocity = Vector2.up * jumpForce;
@@ -44,7 +62,41 @@ public class Player : MonoBehaviour
                     );
         }
         
-
-        
     }
+
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag == "Obstacle")
+        {
+            SceneManager.LoadScene("Game");
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Score")
+        {
+            Score++;
+        }
+    }
+
+
+
+    public IEnumerator SpawnObs()
+    {
+        while (true)  
+        {
+            if (isGamePlaying) 
+            {
+                GameObject obj = Instantiate(ObstacleObj);
+                Vector3 pos = SpawnPos.position;
+                pos.y = Random.Range(-3f, 5f);
+                obj.transform.position = pos;
+            }
+
+            yield return new WaitForSeconds(1);
+        }
+    }
+
 }
