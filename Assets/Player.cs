@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
     public GameObject ObstacleObj;
     public Transform SpawnPos;
 
+    public GameObject StartTxt;
+
     private void Start()
     {
         StartCoroutine(SpawnObs());
@@ -36,6 +38,7 @@ public class Player : MonoBehaviour
         {
             rb.linearVelocity = Vector2.up * jumpForce;
             isGamePlaying = true;
+            StartTxt.SetActive(false);
         }
 
         if (isGamePlaying)
@@ -91,7 +94,7 @@ public class Player : MonoBehaviour
             {
                 GameObject obj = Instantiate(ObstacleObj);
                 Vector3 pos = SpawnPos.position;
-                pos.y = Random.Range(-3f, 5f);
+                pos.y = Random.Range(-2.5f, 4.5f);
                 obj.transform.position = pos;
             }
 
